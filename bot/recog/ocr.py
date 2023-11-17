@@ -28,8 +28,7 @@ def ocr_line(img, lang="ch"):
 
 
 # find_text_pos 查找目标文字在图片中的位置
-def find_text_pos(ocr_result, target):
-    threshold = 0.6
+def find_text_pos(ocr_result, target, threshold=0.6):
     result = None
     for text_info in ocr_result:
         if len(text_info) > 0:
@@ -40,6 +39,7 @@ def find_text_pos(ocr_result, target):
     return result
 
 
+# find_similar_text 查找目标文字在文字列表中的相似文字
 def find_similar_text(target_text, ref_text_list, threshold=0):
     result = ""
     for ref_text in ref_text_list:

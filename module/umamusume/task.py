@@ -1,9 +1,11 @@
+import json
 from enum import Enum
-from bot.base.task import Task, TaskExecuteMode
+from bot.base.task import Task, TaskExecuteMode, TaskType
 
 
 class TaskDetail:
     scenario_name: str
+    current_attribute: list[int]
     expect_attribute: list[int]
     follow_support_card_name: str
     follow_support_card_level: int
@@ -24,6 +26,13 @@ class EndTaskReason(Enum):
 class UmamusumeTask(Task):
     detail: TaskDetail
 
+    def to_dict(self):
+        re = super().to_dict()
+        re.update({
+            "detail": self.detail.__dict__
+        })
+        return re
+
     def end_task(self, status, reason) -> None:
         super().end_task(status, reason)
 
@@ -31,7 +40,7 @@ class UmamusumeTask(Task):
         pass
 
 
-class UmamusumeTaskType(Enum):
+class UmamusumeTaskType(TaskType):
     UMAMUSUME_TASK_TYPE_UNKNOWN = 0
     UMAMUSUME_TASK_TYPE_CULTIVATE = 1
 
@@ -42,6 +51,7 @@ def build_task(task_execute_mode: TaskExecuteMode, task_type: int,
     ut = UmamusumeTask(task_execute_mode=task_execute_mode,
                        task_type=UmamusumeTaskType(task_type), task_desc=task_desc, app_name="umamusume")
     ut.cron_job_config = cron_job_config
+    td.current_attribute = []
     td.expect_attribute = attachment_data['expect_attribute']
     td.follow_support_card_level = int(attachment_data['follow_support_card_level'])
     td.follow_support_card_name = attachment_data['follow_support_card_name']
@@ -56,6 +66,3 @@ def build_task(task_execute_mode: TaskExecuteMode, task_type: int,
     # td.scenario_name = attachment_data['scenario_name']
     ut.detail = td
     return ut
-
-
-

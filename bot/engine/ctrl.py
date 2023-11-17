@@ -3,11 +3,11 @@ from bot.engine.scheduler import scheduler
 
 
 def start():
-    scheduler.start()
+    scheduler.start_task()
 
 
 def stop():
-    scheduler.stop()
+    scheduler.stop_task()
 
 
 def add_task(app_name, task_execute_mode, task_type, task_desc, cron_job_config, attachment_data):
@@ -23,6 +23,13 @@ def delete_task(task_id):
 def get_task_list():
     return scheduler.get_task_list()
 
+def get_task_json_list():
+    return scheduler.get_task_json_list()
+
 
 def reset_task(task_id):
     scheduler.reset_task(task_id)
+
+
+def get_log():
+    return scheduler.get_log()

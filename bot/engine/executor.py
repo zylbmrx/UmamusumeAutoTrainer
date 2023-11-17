@@ -109,7 +109,7 @@ class Executor:
             task.task_start_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
             # 启动应用
-            log.debug("启动："+manifest.app_package_name)
+            log.debug("启动：" + manifest.app_package_name)
             ctx.ctrl.start_app(manifest.app_package_name)
             while self.active:
                 if task.task_status == TaskStatus.TASK_STATUS_RUNNING:

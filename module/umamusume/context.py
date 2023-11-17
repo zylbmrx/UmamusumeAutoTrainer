@@ -48,7 +48,8 @@ class TrainingInfo:
         text = "此训练附带支援卡列表：["
         for c in self.support_card_info_list:
             if c.favor != SupportCardFavorLevel.SUPPORT_CARD_FAVOR_LEVEL_UNKNOWN:
-                text += "[支援卡名称：" + str(c.name) + "支援卡类型：" + str(c.card_type.name) + ", 支援卡羁绊阶段：" + str(c.favor.name) + "] "
+                text += "[支援卡名称：" + str(c.name) + "支援卡类型：" + str(
+                    c.card_type.name) + ", 支援卡羁绊阶段：" + str(c.favor.name) + "] "
         text += "]"
         log.info(text)
 
@@ -104,6 +105,12 @@ class TurnInfo:
     turn_operation: TurnOperation | None
     turn_info_logged: bool
     turn_learn_skill_done: bool
+    current_attribute: list[int]
+
+    @property
+    def current_attribute(self):
+        return [self.uma_attribute.speed, self.uma_attribute.stamina, self.uma_attribute.power, self.uma_attribute.will,
+                self.uma_attribute.intelligence]
 
     def __init__(self):
         self.date = -1
@@ -124,7 +131,8 @@ class TurnInfo:
         log.info("干劲状态 " + str(self.motivation_level.name))
         log.info("体力剩余" + str(self.remain_stamina))
         log.info("当前属性值 速度：%s, 耐力：%s, 力量：%s, 毅力：%s, 智力：%s, 技能点：%s", self.uma_attribute.speed,
-                 self.uma_attribute.stamina, self.uma_attribute.power, self.uma_attribute.will, self.uma_attribute.intelligence, self.uma_attribute.skill_point)
+                 self.uma_attribute.stamina, self.uma_attribute.power, self.uma_attribute.will,
+                 self.uma_attribute.intelligence, self.uma_attribute.skill_point)
         log.info("速度训练结果：")
         self.training_info_list[0].log_training_info()
         log.info("耐力训练结果：")
@@ -140,6 +148,7 @@ class TurnInfo:
 class CultivateContextDetail:
     turn_info: TurnInfo | None
     turn_info_history: list[TurnInfo]
+    current_attribute: list[int] | None
     expect_attribute: list[int] | None
     follow_support_card_name: str
     follow_support_card_level: int
@@ -160,6 +169,7 @@ class CultivateContextDetail:
 
     def __init__(self):
         self.expect_attribute = None
+        self.current_attribute = None
         self.turn_info = TurnInfo()
         self.turn_info_history = []
         self.extra_race_list = []
@@ -194,6 +204,7 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
     ctx = UmamusumeContext(task, ctrl)
     if task.task_type == UmamusumeTaskType.UMAMUSUME_TASK_TYPE_CULTIVATE:
         detail = CultivateContextDetail()
+        detail.expect_attribute = task.detail.current_attribute
         detail.expect_attribute = task.detail.expect_attribute
         detail.follow_support_card_name = task.detail.follow_support_card_name
         detail.follow_support_card_level = task.detail.follow_support_card_level
@@ -206,8 +217,3 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
         detail.allow_recover_tp = task.detail.allow_recover_tp
         ctx.cultivate_detail = detail
     return ctx
-
-
-
-
-

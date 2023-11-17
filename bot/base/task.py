@@ -1,3 +1,4 @@
+import json
 import time
 from enum import Enum
 from abc import abstractmethod, ABCMeta
@@ -16,6 +17,11 @@ class TaskExecuteMode(Enum):
     TASK_EXECUTE_MODE_CRON_JOB = 2
 
 
+
+class TaskType(Enum):
+    pass
+
+
 class TaskStatus(Enum):
     TASK_STATUS_INVALID = 0
     TASK_STATUS_PENDING = 1
@@ -25,6 +31,7 @@ class TaskStatus(Enum):
     TASK_STATUS_FAILED = 5
     TASK_STATUS_SCHEDULED = 6
     TASK_STATUS_CANCELED = 7
+
 
 
 class EndTaskReason(Enum):
@@ -38,12 +45,28 @@ class Task(metaclass=ABCMeta):
     app_name: str = None
     task_execute_mode: TaskExecuteMode = None
     cron_job_config: CronJobConfig = None
-    task_type = None
+    task_type: TaskType = None
     task_status: TaskStatus = None
     task_desc: str = None
     task_start_time: int = None
     task_end_time: int = None
     end_task_reason: EndTaskReason = None
+
+    def to_dict(self):
+
+        re = {
+            "task_id": self.task_id,
+            "app_name": self.app_name,
+            "task_execute_mode": self.task_execute_mode.value,
+            "cron_job_config": self.cron_job_config,
+            "task_type": self.task_type.value,
+            "task_status": self.task_status.value,
+            "task_desc": self.task_desc,
+            "task_start_time": self.task_start_time,
+            "task_end_time": self.task_end_time,
+            "end_task_reason": self.end_task_reason.value if self.end_task_reason is not None else None,
+        }
+        return re
 
     def __init__(self, app_name: str, task_execute_mode: TaskExecuteMode, task_type,
                  task_desc: str, cron_job_config: CronJobConfig = None):
@@ -67,5 +90,3 @@ class Task(metaclass=ABCMeta):
     @abstractmethod
     def start_task(self) -> None:
         pass
-
-

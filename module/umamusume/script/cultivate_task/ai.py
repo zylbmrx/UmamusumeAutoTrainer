@@ -92,16 +92,24 @@ def get_operation(ctx: UmamusumeContext) -> TurnOperation | None:
         medic = True
 
     trip = False
-    if not ctx.cultivate_detail.turn_info.medic_room_available and (ctx.cultivate_detail.turn_info.date <= 36 and ctx.cultivate_detail.turn_info.motivation_level.value <= 3 and ctx.cultivate_detail.turn_info.remain_stamina < 90 and not support_card_max >= 3
-                                                                    or 40 < ctx.cultivate_detail.turn_info.date <= 60 and ctx.cultivate_detail.turn_info.motivation_level.value <= 4 and ctx.cultivate_detail.turn_info.remain_stamina < 90
-                                                                    or 64 < ctx.cultivate_detail.turn_info.date <= 99 and ctx.cultivate_detail.turn_info.motivation_level.value <= 4 and ctx.cultivate_detail.turn_info.remain_stamina < 90):
+    if not ctx.cultivate_detail.turn_info.medic_room_available and (
+            ctx.cultivate_detail.turn_info.date <= 36 and ctx.cultivate_detail.turn_info.motivation_level.value <= 3 and ctx.cultivate_detail.turn_info.remain_stamina < 90 and not support_card_max >= 3
+            or 40 < ctx.cultivate_detail.turn_info.date <= 60 and ctx.cultivate_detail.turn_info.motivation_level.value <= 4 and ctx.cultivate_detail.turn_info.remain_stamina < 90
+            or 64 < ctx.cultivate_detail.turn_info.date <= 99 and ctx.cultivate_detail.turn_info.motivation_level.value <= 4 and ctx.cultivate_detail.turn_info.remain_stamina < 90):
         trip = True
 
     rest = False
-    if ctx.cultivate_detail.turn_info.remain_stamina <= 48:
+    if ctx.cultivate_detail.turn_info.date == 97 and ctx.cultivate_detail.turn_info.remain_stamina <= 48:
+        # 最后一年最后一回合不休息,去做智力训练
+        turn_operation.training_type = TrainingType.TRAINING_TYPE_INTELLIGENCE
+        turn_operation.turn_operation_type = TurnOperationType.TURN_OPERATION_TYPE_TRAINING
+
+        return turn_operation
+
+    elif ctx.cultivate_detail.turn_info.remain_stamina <= 48:
         rest = True
-    elif (
-            ctx.cultivate_detail.turn_info.date == 36 or ctx.cultivate_detail.turn_info.date == 60) and ctx.cultivate_detail.turn_info.remain_stamina < 65:
+    elif ((ctx.cultivate_detail.turn_info.date == 36 or ctx.cultivate_detail.turn_info.date == 60)
+          and ctx.cultivate_detail.turn_info.remain_stamina < 65):
         rest = True
 
     expect_operation_type = TurnOperationType.TURN_OPERATION_TYPE_UNKNOWN
@@ -161,7 +169,7 @@ def get_training_basic_attribute_score(turn_info: TurnInfo, expect_attribute: li
                                       ) + 120 * (1 - date / 72)
         turn_expect_attribute[i] = turn_expect_attribute_item if turn_expect_attribute_item > 0 else 1
     turn_uma_attr = [turn_info.uma_attribute.speed, turn_info.uma_attribute.stamina, turn_info.uma_attribute.power,
-              turn_info.uma_attribute.will, turn_info.uma_attribute.intelligence]
+                     turn_info.uma_attribute.will, turn_info.uma_attribute.intelligence]
     result = []
     expect_attribute_all_complete = all(x >= y for x, y in zip(turn_uma_attr, cultivate_expect_attribute))
     if expect_attribute_all_complete:
@@ -194,7 +202,7 @@ def get_training_basic_attribute_score(turn_info: TurnInfo, expect_attribute: li
                             if attr_difference < 0:
                                 attr_difference = 0
                             rating_incr += attr_difference
-                            overflow_incr = incr[j]-attr_difference
+                            overflow_incr = incr[j] - attr_difference
                             if cultivate_expect_attribute[j] - turn_expect_attribute[j] > overflow_incr:
                                 rating_incr += 0.25 * overflow_incr
                             else:

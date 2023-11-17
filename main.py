@@ -1,5 +1,9 @@
+import os
 import threading
 
+from bot.base.log import set_file_name, LogQueue
+
+set_file_name(os.path.dirname(__file__) + '/log.log', True)
 from bot.base.manifest import register_app
 from bot.engine.scheduler import scheduler
 from module.umamusume.manifest import UmamusumeManifest
@@ -11,4 +15,3 @@ if __name__ == '__main__':
     scheduler_thread.start()
     print("UAT running on http://127.0.0.1:8071")
     run("bot.server.handler:server", host="127.0.0.1", port=8071, log_level="error")
-

@@ -4,6 +4,9 @@
       <div>
         <span>剧本: URA</span>
       </div>
+            <div>
+        <span>当前数值: {{task.detail?.current_attribute}}</span>
+      </div>
       <div>
         <span>目标数值: {{task.detail?.expect_attribute}}</span>
       </div>

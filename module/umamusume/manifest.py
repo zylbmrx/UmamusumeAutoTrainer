@@ -14,6 +14,7 @@ from module.umamusume.user_data import read_presets, write_preset
 
 script_dicts: Dict[UmamusumeTaskType, dict] = {
     UmamusumeTaskType.UMAMUSUME_TASK_TYPE_CULTIVATE: {
+        # 注册脚本
         INFO: script_info,
         MAIN_MENU: script_main_menu,
         CULTIVATE_SCENARIO_SELECT: script_scenario_select,
@@ -68,6 +69,7 @@ default_script_dict: Dict[UI, callable] = {
 def exec_script(ctx: UmamusumeContext):
     if ctx.task.task_type in script_dicts:
         if ctx.current_ui in script_dicts[ctx.task.task_type]:
+            # 执行脚本
             script_dicts[ctx.task.task_type][ctx.current_ui](ctx)
             return
     if ctx.current_ui in default_script_dict:

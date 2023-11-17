@@ -1,3 +1,4 @@
+import time
 from enum import Enum
 
 
@@ -33,6 +34,50 @@ class TrainingType(Enum):
     TRAINING_TYPE_POWER = 3
     TRAINING_TYPE_WILL = 4
     TRAINING_TYPE_INTELLIGENCE = 5
+
+
+class TrainingTry:
+    training_type_dict = {
+    }
+
+    training_try_count_dict = {
+        TrainingType.TRAINING_TYPE_SPEED: 0,
+        TrainingType.TRAINING_TYPE_STAMINA: 0,
+        TrainingType.TRAINING_TYPE_POWER: 0,
+        TrainingType.TRAINING_TYPE_WILL: 0,
+        TrainingType.TRAINING_TYPE_INTELLIGENCE: 0,
+    }
+
+    max_try_time = 5
+    try_sleep_time = 0.5
+
+    def __init__(self, training_type: TrainingType):
+        self.training_type_dict = {TrainingType.TRAINING_TYPE_SPEED: False, TrainingType.TRAINING_TYPE_STAMINA: False,
+                                   TrainingType.TRAINING_TYPE_POWER: False, TrainingType.TRAINING_TYPE_WILL: False,
+                                   TrainingType.TRAINING_TYPE_INTELLIGENCE: False, training_type: True}
+
+    def needBreak(self):
+        return self.isAllSuccess() or sum(self.training_try_count_dict.values()) >= (
+                self.max_try_time * (len(self.training_try_count_dict) - 1))
+
+    def success(self, training_type: TrainingType):
+        self.training_type_dict[training_type] = True
+        print(self.training_type_dict)
+
+    def isAllSuccess(self):
+        for k, v in self.training_type_dict.items():
+            if v is False:
+                return False
+        return True
+
+    def nextTryType(self):
+        while self.needBreak() is not True:
+            print(self.training_type_dict)
+            for k, v in self.training_type_dict.items():
+                if v is False and self.training_try_count_dict[k] <= self.max_try_time:
+                    self.training_try_count_dict[k] += 1
+                    yield k
+                    time.sleep(self.try_sleep_time)
 
 
 class MotivationLevel(Enum):
