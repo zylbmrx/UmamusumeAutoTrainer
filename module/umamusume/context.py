@@ -166,6 +166,7 @@ class CultivateContextDetail:
     learn_skill_before_race: bool
     allow_recover_tp: bool
     parse_factor_done: bool
+    extra_weight: list
 
     def __init__(self):
         self.expect_attribute = None
@@ -183,6 +184,7 @@ class CultivateContextDetail:
         self.clock_used = 0
         self.allow_recover_tp = False
         self.parse_factor_done = False
+        self.extra_weight = []
 
     def reset_skill_learn(self):
         self.learn_skill_done = False
@@ -215,5 +217,6 @@ def build_context(task: UmamusumeTask, ctrl) -> UmamusumeContext:
         detail.learn_skill_threshold = task.detail.learn_skill_threshold
         detail.learn_skill_only_user_provided = task.detail.learn_skill_only_user_provided
         detail.allow_recover_tp = task.detail.allow_recover_tp
+        detail.extra_weight = task.detail.extra_weight
         ctx.cultivate_detail = detail
     return ctx

@@ -17,7 +17,6 @@ class TaskExecuteMode(Enum):
     TASK_EXECUTE_MODE_CRON_JOB = 2
 
 
-
 class TaskType(Enum):
     pass
 
@@ -31,7 +30,6 @@ class TaskStatus(Enum):
     TASK_STATUS_FAILED = 5
     TASK_STATUS_SCHEDULED = 6
     TASK_STATUS_CANCELED = 7
-
 
 
 class EndTaskReason(Enum):
@@ -90,3 +88,6 @@ class Task(metaclass=ABCMeta):
     @abstractmethod
     def start_task(self) -> None:
         pass
+
+    def running(self) -> bool:
+        return self.task_status == TaskStatus.TASK_STATUS_RUNNING
