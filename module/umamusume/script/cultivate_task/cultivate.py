@@ -5,7 +5,7 @@ import numpy as np
 
 from bot.base.task import TaskStatus, EndTaskReason
 from module.umamusume.asset.point import *
-from module.umamusume.context import TurnInfo
+from module.umamusume.context import TurnInfo, TrainingInfo
 from module.umamusume.script.cultivate_task.const import SKILL_LEARN_PRIORITY_LIST
 from module.umamusume.script.cultivate_task.event.manifest import get_event_choice
 from module.umamusume.script.cultivate_task.parse import *
@@ -112,6 +112,8 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
             for k, v in training_try.training_type_dict.items():
                 if v is False and training_try.training_try_count_dict[k] <= training_try.max_try_time:
                     training_try.training_try_count_dict[k] += 1
+
+                    ctx.cultivate_detail.turn_info.training_info_list[train_type.value - 1] = TrainingInfo()
 
                     ctx.ctrl.click_by_point(TRAINING_POINT_LIST[k.value - 1])
                     img = ctx.ctrl.get_screen()
