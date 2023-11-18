@@ -45,6 +45,7 @@ def template_match(target, template, accuracy: float = 0.95) -> ImageMatchResult
     return match_result
 
 
-def compare_color_equal(p: list, target: list, tolerance: int = 10) -> bool:
+def compare_color_equal(p: list, target: list, tolerance: int = 25) -> bool:
+    # TODO 查一下 tolerance 偏差变大在原因
     distance = np.sqrt(np.sum((np.array(target) - np.array(p)) ** 2))
     return distance < tolerance

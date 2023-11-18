@@ -41,11 +41,6 @@ class TrainingTry:
     }
 
     training_try_count_dict = {
-        TrainingType.TRAINING_TYPE_SPEED: 0,
-        TrainingType.TRAINING_TYPE_STAMINA: 0,
-        TrainingType.TRAINING_TYPE_POWER: 0,
-        TrainingType.TRAINING_TYPE_WILL: 0,
-        TrainingType.TRAINING_TYPE_INTELLIGENCE: 0,
     }
 
     max_try_time = 5
@@ -55,6 +50,14 @@ class TrainingTry:
         self.training_type_dict = {TrainingType.TRAINING_TYPE_SPEED: False, TrainingType.TRAINING_TYPE_STAMINA: False,
                                    TrainingType.TRAINING_TYPE_POWER: False, TrainingType.TRAINING_TYPE_WILL: False,
                                    TrainingType.TRAINING_TYPE_INTELLIGENCE: False, training_type: True}
+
+        self.training_try_count_dict = {
+            TrainingType.TRAINING_TYPE_SPEED: 0,
+            TrainingType.TRAINING_TYPE_STAMINA: 0,
+            TrainingType.TRAINING_TYPE_POWER: 0,
+            TrainingType.TRAINING_TYPE_WILL: 0,
+            TrainingType.TRAINING_TYPE_INTELLIGENCE: 0,
+        }
 
     def needBreak(self):
         return self.isAllSuccess() or sum(self.training_try_count_dict.values()) >= (
@@ -70,14 +73,7 @@ class TrainingTry:
                 return False
         return True
 
-    def nextTryType(self):
-        while self.needBreak() is not True:
-            print(self.training_type_dict)
-            for k, v in self.training_type_dict.items():
-                if v is False and self.training_try_count_dict[k] <= self.max_try_time:
-                    self.training_try_count_dict[k] += 1
-                    yield k
-                    time.sleep(self.try_sleep_time)
+
 
 
 class MotivationLevel(Enum):

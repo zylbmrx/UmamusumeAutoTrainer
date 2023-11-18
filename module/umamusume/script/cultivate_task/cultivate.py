@@ -108,17 +108,22 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
         parse_training_support_card(ctx, img, train_type)
         training_try = TrainingTry(TrainingType(train_type.value))
 
-        for i in training_try.nextTryType():
+        while training_try.needBreak() is not True:
+            for k, v in training_try.training_type_dict.items():
+                if v is False and training_try.training_try_count_dict[k] <= training_try.max_try_time:
+                    training_try.training_try_count_dict[k] += 1
 
-            ctx.ctrl.click_by_point(TRAINING_POINT_LIST[i.value - 1])
-            img = ctx.ctrl.get_screen()
-            if parse_train_type(ctx, img) != i:
-                continue
-            parse_training_result(ctx, img, i)
-            parse_training_support_card(ctx, img, i)
-            training_try.success(i)
+                    ctx.ctrl.click_by_point(TRAINING_POINT_LIST[k.value - 1])
+                    img = ctx.ctrl.get_screen()
+                    if parse_train_type(ctx, img) != k:
+                        continue
+                    time.sleep(training_try.try_sleep_time)
 
-        ctx.cultivate_detail.turn_info.parse_train_info_finish = training_try.isAllSuccess()
+                    parse_training_result(ctx, img, k)
+                    parse_training_support_card(ctx, img, k)
+                    training_try.success(k)
+
+        ctx.cultivate_detail.turn_info.parse_train_info_finish = training_try.needBreak()
     if not ctx.cultivate_detail.turn_info.parse_main_menu_finish:
         ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
         return
@@ -374,17 +379,16 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
             if i not in skill_list:
                 skill_list.append(i)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        if not compare_color_equal(img[1006, 701], [211, 209, 219]):
+        if not compare_color_equal(img[1006, 701], [211, 209, 219], 25):
             break
         ctx.ctrl.swipe(x1=23, y1=1000, x2=23, y2=636, duration=1000, name="")
         time.sleep(1)
-
 
     log.debug("当前技能状态：" + str(skill_list))
 
     # 将金色技能和其后面的技能绑定
     for i in range(len(skill_list)):
-        if i != (len(skill_list) - 1) and skill_list[i]["gold"] is True:
+        if i != (len(skill_list) - 1) and skill_list[i]["is_gold"] is True:
             skill_list[i]["subsequent_skill"] = skill_list[i + 1]["skill_name"]
 
     # 按照优先级排列
@@ -401,7 +405,6 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
     for i in range(len(learn_skill_list) + 1):
         if (i > 0 and ctx.cultivate_detail.learn_skill_only_user_provided is True and
                 not ctx.cultivate_detail.cultivate_finish):
-
             break
         for j in range(len(skill_list)):
             if skill_list[j]["priority"] != i or skill_list[j]["available"] is False:
@@ -433,7 +436,7 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
         if len(target_skill_list) == 0:
             break
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        if not compare_color_equal(img[488, 701], [211, 209, 219]):
+        if not compare_color_equal(img[488, 701], [211, 209, 219], 25):
             break
         ctx.ctrl.swipe(x1=23, y1=636, x2=23, y2=1000, duration=1000, name="")
         time.sleep(1)

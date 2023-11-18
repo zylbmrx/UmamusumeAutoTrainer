@@ -163,7 +163,8 @@ def parse_umamusume_remain_stamina_value(ctx: UmamusumeContext, img):
     sub_img_remain_stamina = img[160:161, 229:505]
     stamina_counter = 0
     for c in sub_img_remain_stamina[0]:
-        if not compare_color_equal(c, [117, 117, 117]):
+        if not compare_color_equal(c, [117, 117, 117], 20):
+            # 色彩识别失败
             stamina_counter += 1
     remain_stamina = int(stamina_counter / 276 * 100)
     ctx.cultivate_detail.turn_info.remain_stamina = remain_stamina
@@ -466,12 +467,12 @@ def get_skill_list(img, skill: list[str]) -> list:
                 res.append({"skill_name": text,
                             "skill_cost": int(cost),
                             "priority": priority,
-                            "gold": is_gold,
+                            "is_gold": is_gold,
                             "subsequent_skill": "",
                             "available": available,
                             "y_pos": int(pos_center[1])})
             img[match_result.matched_area[0][1]:match_result.matched_area[1][1],
-                match_result.matched_area[0][0]:match_result.matched_area[1][0]] = 0
+            match_result.matched_area[0][0]:match_result.matched_area[1][0]] = 0
 
         # 解析曾经获得过的技能
         match_result = image_match(img, REF_SKILL_LEARNED)
@@ -491,12 +492,12 @@ def get_skill_list(img, skill: list[str]) -> list:
                 res.append({"skill_name": text,
                             "skill_cost": 0,
                             "priority": -1,
-                            "gold": is_gold,
+                            "is_gold": is_gold,
                             "subsequent_skill": "",
                             "available": False,
                             "y_pos": int(pos_center[1])})
             img[match_result.matched_area[0][1]:match_result.matched_area[1][1],
-                match_result.matched_area[0][0]:match_result.matched_area[1][0]] = 0
+            match_result.matched_area[0][0]:match_result.matched_area[1][0]] = 0
         if all_skill_scanned:
             break
 
@@ -521,7 +522,8 @@ def parse_factor(ctx: UmamusumeContext):
             factor_level = 0
             factor_level_check_point = [factor_info_img[35, 535], factor_info_img[35, 565], factor_info_img[35, 595]]
             for i in range(len(factor_level_check_point)):
-                if not compare_color_equal(factor_level_check_point[i], [223, 227, 237]):
+                if not compare_color_equal(factor_level_check_point[i], [223, 227, 237], 15):
+                    # TODO 识别错误
                     factor_level += 1
                 else:
                     break
