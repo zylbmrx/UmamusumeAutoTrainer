@@ -113,19 +113,22 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                 if v is False and training_try.training_try_count_dict[k] <= training_try.max_try_time:
                     training_try.training_try_count_dict[k] += 1
 
-                    ctx.cultivate_detail.turn_info.training_info_list[train_type.value - 1] = TrainingInfo()
-
+                    ctx.cultivate_detail.turn_info.training_info_list[k.value - 1] = TrainingInfo()
+                    # TODO 解决小栗帽游泳训练数据读取失败的原因
                     ctx.ctrl.click_by_point(TRAINING_POINT_LIST[k.value - 1])
                     img = ctx.ctrl.get_screen()
                     if parse_train_type(ctx, img) != k:
+                        time.sleep(training_try.try_sleep_time)
                         continue
-                    time.sleep(training_try.try_sleep_time)
 
                     parse_training_result(ctx, img, k)
                     parse_training_support_card(ctx, img, k)
                     training_try.success(k)
+                    time.sleep(training_try.try_sleep_time)
+
 
         ctx.cultivate_detail.turn_info.parse_train_info_finish = training_try.needBreak()
+
     if not ctx.cultivate_detail.turn_info.parse_main_menu_finish:
         ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
         return
