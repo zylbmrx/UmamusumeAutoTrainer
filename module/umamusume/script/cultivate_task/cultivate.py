@@ -330,7 +330,7 @@ def script_cultivate_catch_doll(ctx: UmamusumeContext):
     # 等待归位
     ctx.ctrl.swipe(x1=357, y1=995, x2=351, y2=996, duration=1878, name="")
     time.sleep(20)
-    ctx.ctrl.swipe(x1=357, y1=995, x2=356, y2=994, duration=2000, name="")
+    ctx.ctrl.swipe(x1=357, y1=995, x2=356, y2=994, duration=1800, name="")
     time.sleep(20)
     ctx.ctrl.swipe(x1=357, y1=995, x2=358, y2=993, duration=649, name="")
     time.sleep(20)

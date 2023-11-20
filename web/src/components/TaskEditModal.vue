@@ -134,21 +134,24 @@
             </div>
             <div>
               <div class="form-group">
-              <span v-if="!showAdvanceOption" class="btn auto-btn" style="width: 100%; background-color:#6c757d;" v-on:click="switchAdvanceOption">展开高级选项</span>
-              <span v-if="showAdvanceOption" class="btn auto-btn" style="width: 100%; background-color:#6c757d;" v-on:click="switchAdvanceOption">收起高级选项</span>
+                <span v-if="!showAdvanceOption" class="btn auto-btn" style="width: 100%; background-color:#6c757d;"
+                      v-on:click="switchAdvanceOption">展开高级选项</span>
+                <span v-if="showAdvanceOption" class="btn auto-btn" style="width: 100%; background-color:#6c757d;"
+                      v-on:click="switchAdvanceOption">收起高级选项</span>
               </div>
             </div>
-            <div v-if ="showAdvanceOption">
+            <div v-if="showAdvanceOption">
               <div class="form-group">
                 <div>⭐ 额外权重</div>
               </div>
-              <p>调整ai对训练的倾向, 不影响最终目标属性, 一般用于提前完成某一种训练的目标属性，建议权重范围 [-1.0 ~ 1.0], 0即为不使用额外权重;</p>
+              <p>调整ai对训练的倾向, 不影响最终目标属性, 一般用于提前完成某一种训练的目标属性，建议权重范围 [-1.0 ~ 1.0],
+                0即为不使用额外权重;</p>
               <p>支援卡或种马强度低时, 建议增加在一个属性权重的同时减少其他属性同样数值的权重</p>
               <div style="margin-bottom: 10px;">第一年</div>
               <div class="row">
                 <div v-for="v,i in extraWeight1" class="col">
                   <div class="form-group">
-                      <input type="number" v-model="extraWeight1[i]" class="form-control" id="speed-value-input">
+                    <input type="number" v-model="extraWeight1[i]" class="form-control" id="speed-value-input">
                   </div>
                 </div>
               </div>
@@ -156,7 +159,7 @@
               <div class="row">
                 <div v-for="v,i in extraWeight2" class="col">
                   <div class="form-group">
-                      <input type="number" v-model="extraWeight2[i]" class="form-control" id="speed-value-input">
+                    <input type="number" v-model="extraWeight2[i]" class="form-control" id="speed-value-input">
                   </div>
                 </div>
               </div>
@@ -164,7 +167,7 @@
               <div class="row">
                 <div v-for="v,i in extraWeight3" class="col">
                   <div class="form-group">
-                      <input type="number" v-model="extraWeight3[i]" class="form-control" id="speed-value-input">
+                    <input type="number" v-model="extraWeight3[i]" class="form-control" id="speed-value-input">
                   </div>
                 </div>
               </div>
@@ -371,11 +374,11 @@
 <script>
 export default {
   name: "TaskEditModal",
-  data:function () {
-    return{
-      showAdvanceOption:false,
-      showRaceList:false,
-      dataReady:false,
+  data: function () {
+    return {
+      showAdvanceOption: false,
+      showRaceList: false,
+      dataReady: false,
       hideG2: false,
       hideG3: false,
       levelDataList: [],
@@ -728,7 +731,7 @@ export default {
       selectedExecuteMode: 1,
       expectTimes: 0,
       cron: "* * * * *",
-      
+
       selectedUmamusumeTaskType: undefined,
       selectedSupportCard: undefined,
       extraRace: [],
@@ -761,10 +764,10 @@ export default {
     switchRaceList: function () {
       this.showRaceList = !this.showRaceList
     },
-    switchAdvanceOption: function(){
+    switchAdvanceOption: function () {
       this.showAdvanceOption = !this.showAdvanceOption
     },
-    addTask: function (){
+    addTask: function () {
       var learn_skill_list = this.skillLearn ? this.skillLearn.split(",") : []
       let payload = {
         app_name: "umamusume",
@@ -814,6 +817,7 @@ export default {
       this.selectedRaceTactic3 = this.presetsUse.race_tactic_3
       this.skillLearn = this.presetsUse.skill
       this.learnSkillOnlyUserProvided = this.presetsUse.learn_skill_only_user_provided === true
+      this.extraWeight1= this.presetsUse.extraWeight1, this.extraWeight2= this.presetsUse.extraWeight2, this.extraWeight3= this.presetsUse.extraWeight3
     },
     getPresets: function () {
       this.axios.post("/umamusume/get-presets", "").then(
@@ -840,6 +844,7 @@ export default {
         race_tactic_1: this.selectedRaceTactic1,
         race_tactic_2: this.selectedRaceTactic2,
         race_tactic_3: this.selectedRaceTactic3,
+        extraWeight1: this.extraWeight1, extraWeight2: this.extraWeight2, extraWeight3: this.extraWeight3,
       }
       let payload = {
         "preset": JSON.stringify(preset)
