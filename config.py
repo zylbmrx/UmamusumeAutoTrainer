@@ -1,7 +1,4 @@
 import yaml
-import bot.base.log as logger
-
-log = logger.get_logger(__name__)
 
 
 class Config(dict):

@@ -1,10 +1,6 @@
-import os
 import sys
 import threading
 
-from bot.base.log import set_file_name, LogQueue
-
-set_file_name(os.path.dirname(__file__) + '/log.log', True)
 from bot.base.manifest import register_app
 from bot.engine.scheduler import scheduler
 from module.umamusume.manifest import UmamusumeManifest

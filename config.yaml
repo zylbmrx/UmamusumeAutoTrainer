@@ -6,4 +6,12 @@ bot:
       delay: 0.5
     cpu_alloc: 4
 
+test:
+  log_level: "DEBUG"
+  web_log_level: "INFO"
+  log_path: "./log"
+  log_name: "log.log"
+  save_screen: true
+  save_screen_path: "./log/screen"
+
 

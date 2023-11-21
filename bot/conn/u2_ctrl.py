@@ -1,10 +1,11 @@
 import time
 import random
+import os
 
 import cv2
 import uiautomator2 as u2
 
-import bot.conn.os as os
+import bot.conn.os as bot_os
 import bot.base.log as logger
 import threading
 
@@ -30,6 +31,8 @@ def wrapper(func):
                 log.error(e)
                 log.error("第" + str(tries) + "次失败")
                 time.sleep(2)
+        log.error("adb操作失败")
+        raise Exception("adb操作失败")
 
     return checker
 
@@ -44,6 +47,10 @@ class U2AndroidController(AndroidController):
     u2client = None
 
     def __init__(self):
+        if CONFIG.test.save_screen:
+            if not os.path.exists(CONFIG.test.save_screen_path):
+                os.makedirs(CONFIG.test.save_screen_path)
+
         pass
 
     # init_env 初始化环境
@@ -57,6 +64,18 @@ class U2AndroidController(AndroidController):
         cur_screen = self.u2client.screenshot(format='opencv')
         if to_gray:
             return cv2.cvtColor(cur_screen, cv2.COLOR_BGR2GRAY)
+
+        if CONFIG.test.save_screen:
+            # 保存截图,方便确认识别问题
+            # try:
+            #     cv2.imwrite(CONFIG.test.save_screen_path + "/%s.png" % time.time(), cur_screen)
+            # except :
+            #     log.debug("save screen1 error")
+            try:
+                cv2.imencode('.png', cur_screen)[1].tofile(CONFIG.test.save_screen_path + "/%s.png" % time.time())
+            except :
+                log.debug("save screen error")
+
         return cur_screen
 
     # ===== ctrl =====
@@ -111,7 +130,7 @@ class U2AndroidController(AndroidController):
     # execute_adb_shell 执行adb命令
     @wrapper
     def execute_adb_shell(self, cmd, sync):
-        cmd = os.run_cmd(self.path + "adb.exe -s " + self.device_name + " " + cmd)
+        cmd = bot_os.run_cmd(self.path + "adb.exe -s " + self.device_name + " " + cmd)
         if sync:
             cmd.communicate()
         else:
@@ -134,7 +153,7 @@ class U2AndroidController(AndroidController):
     # get_devices 获取adb连接设备状态
     @wrapper
     def get_devices(self):
-        p = os.run_cmd(self.path + "adb.exe devices").communicate()
+        p = bot_os.run_cmd(self.path + "adb.exe devices").communicate()
         devices = p[0].decode()
         log.debug(devices)
         return devices
@@ -142,13 +161,13 @@ class U2AndroidController(AndroidController):
     # connect_to_device 连接至设备
     @wrapper
     def connect_to_device(self):
-        p = os.run_cmd(self.path + "adb.exe connect " + self.device_name).communicate()
+        p = bot_os.run_cmd(self.path + "adb.exe connect " + self.device_name).communicate()
         log.debug(p[0].decode())
 
     # kill_adb_server 停止adb-server
     @wrapper
     def kill_adb_server(self):
-        p = os.run_cmd(self.path + "adb.exe kill-server").communicate()
+        p = bot_os.run_cmd(self.path + "adb.exe kill-server").communicate()
         log.debug(p[0].decode())
 
     # check_file_exist 判断文件是否存在

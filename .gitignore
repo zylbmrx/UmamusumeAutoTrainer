@@ -3,3 +3,4 @@ venv
 userdata
 __pycache__
 *.bak
+log
