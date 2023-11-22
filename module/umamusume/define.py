@@ -65,7 +65,6 @@ class TrainingTry:
 
     def success(self, training_type: TrainingType):
         self.training_type_dict[training_type] = True
-        print(self.training_type_dict)
 
     def isAllSuccess(self):
         for k, v in self.training_type_dict.items():

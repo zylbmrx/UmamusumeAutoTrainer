@@ -4,3 +4,5 @@ userdata
 __pycache__
 *.bak
 log
+**/__pycache__
+.vscode
