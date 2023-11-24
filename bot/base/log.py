@@ -16,7 +16,19 @@ log_colors_config = {
     'CRITICAL': 'bold_red',
 }
 
-LogQueue = Queue(maxsize=1000)
+
+class logQueue(Queue):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def put(self, record, block=True, timeout=None):
+        # 丢弃队列中的日志
+        if self.full():
+            self.get()
+        super().put(record, block, timeout)
+
+
+LogQueue = logQueue(maxsize=1000)
 
 
 def get_log_file_name(clear=False) -> str:

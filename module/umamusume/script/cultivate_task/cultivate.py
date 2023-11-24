@@ -126,7 +126,6 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
                     training_try.success(k)
                     time.sleep(training_try.try_sleep_time)
 
-
         ctx.cultivate_detail.turn_info.parse_train_info_finish = training_try.needBreak()
 
     if not ctx.cultivate_detail.turn_info.parse_main_menu_finish:
@@ -333,7 +332,7 @@ def script_cultivate_catch_doll(ctx: UmamusumeContext):
     # 等待归位
     ctx.ctrl.swipe(x1=357, y1=995, x2=351, y2=996, duration=1878, name="")
     time.sleep(20)
-    ctx.ctrl.swipe(x1=357, y1=995, x2=356, y2=994, duration=1800, name="")
+    ctx.ctrl.swipe(x1=357, y1=995, x2=356, y2=994, duration=1890, name="")
     time.sleep(20)
     ctx.ctrl.swipe(x1=357, y1=995, x2=358, y2=993, duration=649, name="")
     time.sleep(20)
