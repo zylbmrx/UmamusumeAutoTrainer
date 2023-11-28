@@ -2,6 +2,7 @@ from bot.base.resource import UI
 import module.umamusume.asset.template as template
 
 MAIN_MENU = UI("MAIN_MENU", [template.UI_MAIN_MENU], [])
+# TODO: 处理弹出公告/处理继续养成
 CULTIVATE_SCENARIO_SELECT = UI("CULTIVATE_SCENARIO_SELECT", [template.UI_CULTIVATE_SCENARIO_SELECT], [])
 CULTIVATE_FOLLOW_SUPPORT_CARD_SELECT = UI("CULTIVATE_FOLLOW_SUPPORT_CARD_SELECT",
                                           [template.UI_CULTIVATE_FOLLOW_SUPPORT_CARD_SELECT], [])

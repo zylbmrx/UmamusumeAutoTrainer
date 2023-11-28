@@ -89,6 +89,7 @@ pyelftools==0.29
 pyflakes==2.4.0
 PyMuPDF==1.20.2
 pyparsing==3.0.8
+pypiwin32
 python-dateutil==2.8.2
 python-docx==0.8.11
 pytz==2022.1
@@ -113,7 +114,7 @@ tqdm==4.64.0
 typing_extensions==4.2.0
 uiautomator2==2.16.23
 urllib3==1.26.9
-uvicorn==0.18.2
+uvicorn==0.24.0
 virtualenv==20.14.1
 visualdl==2.2.3
 websockets==10.4

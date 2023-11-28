@@ -11,7 +11,16 @@ test:
   web_log_level: "INFO"
   log_path: "./log"
   log_name: "log.log"
-  save_screen: true
+  save_screen: false
   save_screen_path: "./log/screen"
 
 
+bluestacks:
+  path: C:\Program Files\BlueStacks_nxt_cn\HD-Player.exe
+  check_config: True
+  bluestacks_conf: E:\BlueStacks_nxt_cn\BlueStacks_nxt_cn\bluestacks.conf
+  instance: bst.instance.Pie64
+  fb_height: 1280
+  fb_width: 720
+  gl_win_screen: \\.\DISPLAY2
+  dpi: 180

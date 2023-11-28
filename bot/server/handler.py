@@ -1,13 +1,13 @@
 import asyncio
 import json
 import os
-import threading
-from time import sleep
+import sys
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.websockets import WebSocket, WebSocketDisconnect, WebSocketState
+from starlette.websockets import WebSocket, WebSocketDisconnect
 
+from bot.conn.connect_hook import before_connect, after_connect
 from bot.engine import ctrl as bot_ctrl
 from bot.server.protocol.task import *
 from starlette.responses import FileResponse
@@ -23,6 +23,23 @@ server.add_middleware(
     allow_headers=["*"],
 )
 log = logger.get_logger(__name__)
+
+
+@server.on_event("startup")
+def startup_event():
+    before_connect()
+
+
+@server.on_event("shutdown")
+def shutdown_event():
+    if sys.platform == "win32":
+        import win32api
+        after_connect()
+        print("UAT shutdown")
+        win32api.SetConsoleCtrlHandler(lambda a=None: os.kill(os.getpid(),
+                                                              15))
+        # Enables ctrl+C to kill the terminal on Windows. 15 == signal.SIGTERM
+
 
 
 @server.post("/task")
