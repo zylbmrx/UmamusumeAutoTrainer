@@ -18,6 +18,7 @@ test:
 bluestacks:
   path: C:\Program Files\BlueStacks_nxt_cn\HD-Player.exe
   check_config: True
+  close_bluestacks: True
   bluestacks_conf: E:\BlueStacks_nxt_cn\BlueStacks_nxt_cn\bluestacks.conf
   instance: bst.instance.Pie64
   fb_height: 1280

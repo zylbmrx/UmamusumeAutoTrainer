@@ -36,7 +36,6 @@ def kill_emulator():
             arr = line.split(',')
             if len(arr) >= 2 and (arr[1] == address or arr[1] == f"[::]:{port}" or arr[1] == f"0.0.0.0:{port}"):
                 pid = int(arr[4])
-                print(pid)
                 break
         except Exception as e:
             print(f"Failed to parse cmd.exe output: {str(e)}")

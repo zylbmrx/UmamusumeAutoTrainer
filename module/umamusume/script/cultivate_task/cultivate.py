@@ -359,7 +359,7 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
             ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_FINISH)
         return
     learn_skill_list: list
-    if ctx.cultivate_detail.cultivate_finish or not ctx.cultivate_detail.learn_skill_only_user_provided:
+    if not ctx.cultivate_detail.learn_skill_only_user_provided:
         if len(ctx.cultivate_detail.learn_skill_list) == 0:
             learn_skill_list = SKILL_LEARN_PRIORITY_LIST
         else:
@@ -373,6 +373,21 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
         else:
             learn_skill_list = [ctx.cultivate_detail.learn_skill_list]
 
+    script_cultivate_learn_skill_select(ctx, learn_skill_list)
+
+    if ctx.cultivate_detail.cultivate_finish:
+        # 如果是养成结束,在点完必点技能或者没有必点技能后再识别一次,学习其他技能
+        if len(ctx.cultivate_detail.learn_skill_list) == 0:
+            learn_skill_list = SKILL_LEARN_PRIORITY_LIST
+        else:
+            learn_skill_list = [ctx.cultivate_detail.learn_skill_list] + SKILL_LEARN_PRIORITY_LIST
+        script_cultivate_learn_skill_select(ctx, learn_skill_list)
+
+    ctx.cultivate_detail.learn_skill_done = True
+    ctx.cultivate_detail.turn_info.turn_learn_skill_done = True
+
+
+def script_cultivate_learn_skill_select(ctx: UmamusumeContext, learn_skill_list: list):
     # 遍历整页, 找出所有可点的技能
     skill_list = []
     while ctx.task.running():
@@ -447,9 +462,6 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
 
     log.debug("当前待学习的技能：" + str(ctx.cultivate_detail.learn_skill_list))
     log.debug("当前已学习的技能：" + str([skill['skill_name'] for skill in skill_list if not skill['available']]))
-
-    ctx.cultivate_detail.learn_skill_done = True
-    ctx.cultivate_detail.turn_info.turn_learn_skill_done = True
 
 
 def script_not_found_ui(ctx: UmamusumeContext):

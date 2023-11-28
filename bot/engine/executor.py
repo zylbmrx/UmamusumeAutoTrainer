@@ -16,7 +16,6 @@ from concurrent.futures import ThreadPoolExecutor
 from bot.base.manifest import APP_MANIFEST_LIST
 from config import CONFIG
 
-
 log = logger.get_logger(__name__)
 
 debug = True
@@ -141,4 +140,3 @@ class Executor:
         task.end_task_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
         push_system_notification("任务结束", str(task.end_task_reason.value), 10)
         controller.destroy()
-

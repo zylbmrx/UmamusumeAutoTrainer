@@ -1,7 +1,9 @@
 import asyncio
 import json
 import os
+import signal
 import sys
+import time
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -33,13 +35,9 @@ def startup_event():
 @server.on_event("shutdown")
 def shutdown_event():
     if sys.platform == "win32":
-        import win32api
         after_connect()
-        print("UAT shutdown")
-        win32api.SetConsoleCtrlHandler(lambda a=None: os.kill(os.getpid(),
-                                                              15))
-        # Enables ctrl+C to kill the terminal on Windows. 15 == signal.SIGTERM
-
+        # 解决pycharm下按ctrl+c无法退出的问题
+        os.popen("taskkill /F /PID " + str(os.getpid()))
 
 
 @server.post("/task")
