@@ -143,6 +143,7 @@ def script_main_menu(ctx: UmamusumeContext):
 def script_announcement(ctx: UmamusumeContext):
     ctx.ctrl.click_by_point(ANNOUNCEMENT_CLOSE)
 
+
 def script_continue_to_develop(ctx: UmamusumeContext):
     ctx.ctrl.click_by_point(CONTINUE_TO_DEVELOP_BUTTON)
 
@@ -360,9 +361,20 @@ def script_cultivate_finish(ctx: UmamusumeContext):
 
 def script_cultivate_learn_skill(ctx: UmamusumeContext):
     if ctx.cultivate_detail.learn_skill_done:
-        if ctx.cultivate_detail.learn_skill_selected:
+        if ctx.cultivate_detail.learn_skill_selected and ctx.cultivate_detail.learn_skill_selected_click_count < 10:
+            # TODO 查找原因
+            ctx.cultivate_detail.learn_skill_selected_click_count += 1
+            if ctx.cultivate_detail.learn_skill_selected_click_count > 3:
+                # 说明可能出现了卡在了技能选择界面的情况
+                time.sleep(3)
+                # (尽可能)排除网络延迟的影响
             ctx.ctrl.click_by_point(CULTIVATE_LEARN_SKILL_CONFIRM)
+        elif ctx.cultivate_detail.learn_skill_selected and ctx.cultivate_detail.learn_skill_selected_click_count >= 10:
+            ctx.cultivate_detail.learn_skill_selected = False
+            ctx.cultivate_detail.learn_skill_selected_click_count = 0
+            ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_FINISH)
         else:
+            ctx.cultivate_detail.learn_skill_selected_click_count = 0
             ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_FINISH)
         return
     learn_skill_list: list

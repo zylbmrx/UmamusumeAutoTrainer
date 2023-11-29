@@ -13,37 +13,37 @@ import bot.base.log as logger
 
 log = logger.get_logger(__name__)
 
-TITLE = [
-    "赛事详情",
-    "休息&外出确认",
-    "网络错误",
-    "重新挑战",
-    "获得誉名",
-    "完成养成",
-    "缩短事件设置",
-    "外出确认",
-    "技能获取确认",
-    "成功获得技能",
-    "养成结束确认",
-    "优俊少女详情",
-    "粉丝数未达到目标赛事要求",
-    "外出",
-    "跳过确认",
-    "休息确认",
-    "赛事推荐功能",
-    "战术",
-    "目标粉丝数不足",
-    "连续参赛",
-    "医务室确认",
-    "礼物箱",
-    "领取成功",
-    "解锁角色剧情",
-    "目标达成次数不足",
-    "活动剧情解锁",
-    "确认",
-    "回复训练值",
-    "选择养成难度"
-]
+TITLE = {
+    0: "赛事详情",
+    1: "休息&外出确认",
+    2: "网络错误",
+    3: "重新挑战",
+    4: "获得誉名",
+    5: "完成养成",
+    6: "缩短事件设置",
+    7: "外出确认",
+    8: "技能获取确认",
+    9: "成功获得技能",
+    10: "养成结束确认",
+    11: "优俊少女详情",
+    12: "粉丝数未达到目标赛事要求",
+    13: "外出",
+    14: "跳过确认",
+    15: "休息确认",
+    16: "赛事推荐功能",
+    17: "战术",
+    18: "目标粉丝数不足",
+    19: "连续参赛",
+    20: "医务室确认",
+    21: "礼物箱",
+    22: "领取成功",
+    23: "解锁角色剧情",
+    24: "目标达成次数不足",
+    25: "活动剧情解锁",
+    26: "确认",
+    27: "回复训练值",
+    28: "选择养成难度",
+}
 
 
 def script_info(ctx: UmamusumeContext):
@@ -55,7 +55,7 @@ def script_info(ctx: UmamusumeContext):
         title_img = img[pos[0][1] - 5:pos[1][1] + 5, pos[0][0] + 150: pos[1][0] + 405]
         title_text = ocr_line(title_img)
         log.debug(title_text)
-        title_text = find_similar_text(title_text, TITLE, 0.8)
+        title_text = find_similar_text(title_text, TITLE.values(), 0.8)
         if title_text == "":
             log.warning("未知的选项框")
             return
@@ -109,7 +109,7 @@ def script_info(ctx: UmamusumeContext):
             date = ctx.cultivate_detail.turn_info.date
             if date != -1:
                 if date <= 72:
-                    ctx.ctrl.click_by_point(TACTIC_LIST[ctx.cultivate_detail.tactic_list[int((date - 1)/ 24)] - 1])
+                    ctx.ctrl.click_by_point(TACTIC_LIST[ctx.cultivate_detail.tactic_list[int((date - 1) / 24)] - 1])
                 else:
                     ctx.ctrl.click_by_point(TACTIC_LIST[ctx.cultivate_detail.tactic_list[2] - 1])
             time.sleep(0.5)
@@ -145,4 +145,3 @@ def script_info(ctx: UmamusumeContext):
         if title_text == TITLE[28]:
             ctx.ctrl.click_by_point(SELECT_DIFFICULTY)
         time.sleep(1)
-

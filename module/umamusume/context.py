@@ -177,6 +177,7 @@ class CultivateContextDetail:
         self.learn_skill_list = []
         self.learn_skill_done = False
         self.learn_skill_selected = False
+        self.learn_skill_selected_click_count = 0
         self.cultivate_finish = False
         self.tactic_list = []
         self.debut_race_win = False

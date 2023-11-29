@@ -2,10 +2,12 @@ from bot.base.resource import UI
 import module.umamusume.asset.template as template
 
 MAIN_MENU = UI("MAIN_MENU", [], []
-               , [template.UI_MAIN_MENU, template.UI_MAIN_MENU_1, template.UI_MAIN_MENU_2]
-               , 2
+               , [template.UI_MAIN_MENU, template.UI_MAIN_MENU_1, template.UI_MAIN_MENU_2
+, template.UI_MAIN_MENU_3, template.UI_MAIN_MENU_4, template.UI_MAIN_MENU_5
+                  ]
+               , 3
                )
-# 主菜单三中二(后续考虑把左右的楼梯和切换看板娘(日/夜)加进来)
+# 主菜单五中三,其中UI_MAIN_MENU 和 UI_MAIN_MENU_5 存在互斥的情况
 
 ANNOUNCEMENT = UI("ANNOUNCEMENT",
                   [
