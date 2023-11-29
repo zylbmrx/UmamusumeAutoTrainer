@@ -2,8 +2,10 @@ from bot.base.common import Coordinate
 from bot.base.point import ClickPoint, ClickPointType
 from module.umamusume.asset.template import *
 
+ANNOUNCEMENT_CLOSE = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(350, 1180), "点击关闭公告", None)
 # cultivate
 TO_CULTIVATE_SCENARIO_CHOOSE = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(545, 1085), "前往剧本选择", None)
+CONTINUE_TO_DEVELOP_BUTTON = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(520, 915), "继续育成", None)
 TO_CULTIVATE_PREPARE_NEXT = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(355, 1080), "育成准备-前往下一步")
 CULTIVATE_FINAL_CHECK_START = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(500, 1185), "开始育成")
 TO_FOLLOW_SUPPORT_CARD_SELECT = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(570, 680), "借用支援卡")

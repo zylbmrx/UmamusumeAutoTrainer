@@ -66,6 +66,8 @@ class Executor:
 
     def detect_ui_sub(self, ui: UI, target) -> None:
         result = True
+
+        # 首先检查必须存在的ui
         for template in ui.check_exist_template_list:
             sub_target = target[
                          template.image_match_config.match_area.y1:template.image_match_config.match_area.y2,
@@ -76,16 +78,35 @@ class Executor:
                     break
             else:
                 log.error("template not set match mode")
-        for template in ui.check_non_exist_template_list:
-            sub_target = target[
-                         template.image_match_config.match_area.y1:template.image_match_config.match_area.y2,
-                         template.image_match_config.match_area.x1:template.image_match_config.match_area.x2]
-            if template.image_match_config.match_mode == ImageMatchMode.IMAGE_MATCH_MODE_TEMPLATE_MATCH:
-                if template_match(sub_target, template.template_image).find_match:
-                    result = False
-                    break
-            else:
-                log.error("template not set match mode")
+
+        # 然后检查多选的ui
+        if result is True and len(ui.check_on_template_list) > 0:
+            # 前条件检查不通过就可以返回了
+            tem_pass_count = 0
+            for template in ui.check_on_template_list:
+                if template.image_match_config.match_mode == ImageMatchMode.IMAGE_MATCH_MODE_TEMPLATE_MATCH:
+                    if template_match(target, template.template_image).find_match:
+                        tem_pass_count += 1
+                        if tem_pass_count >= ui.check_pass_count:
+                            break
+                else:
+                    log.error("template not set match mode")
+            if tem_pass_count < ui.check_pass_count:
+                result = False
+
+        # 排除不能出现的ui
+        if result is True:
+            for template in ui.check_non_exist_template_list:
+                sub_target = target[
+                             template.image_match_config.match_area.y1:template.image_match_config.match_area.y2,
+                             template.image_match_config.match_area.x1:template.image_match_config.match_area.x2]
+                if template.image_match_config.match_mode == ImageMatchMode.IMAGE_MATCH_MODE_TEMPLATE_MATCH:
+                    if template_match(sub_target, template.template_image).find_match:
+                        result = False
+                        break
+                else:
+                    log.error("template not set match mode")
+
         if result is True:
             self.detect_ui_results_write_lock.acquire()
             self.detect_ui_results.append(ui)

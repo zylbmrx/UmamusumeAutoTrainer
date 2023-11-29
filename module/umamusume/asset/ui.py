@@ -1,11 +1,24 @@
 from bot.base.resource import UI
 import module.umamusume.asset.template as template
 
-MAIN_MENU = UI("MAIN_MENU",
-               [
-                   template.UI_MAIN_MENU, template.UI_MAIN_MENU_1, template.UI_MAIN_MENU_2],
-               [])
-# TODO: 处理弹出公告的情况
+MAIN_MENU = UI("MAIN_MENU", [], []
+               , [template.UI_MAIN_MENU, template.UI_MAIN_MENU_1, template.UI_MAIN_MENU_2]
+               , 2
+               )
+# 主菜单三中二(后续考虑把左右的楼梯和切换看板娘(日/夜)加进来)
+
+ANNOUNCEMENT = UI("ANNOUNCEMENT",
+                  [
+                      template.UI_ANNOUNCEMENT_1, template.UI_ANNOUNCEMENT_2],
+                  [])
+# 公告
+
+CONTINUE_TO_DEVELOP = UI("CONTINUE_TO_DEVELOP",
+                         [template.UI_CONTINUE_TO_DEVELOP_1, template.UI_CONTINUE_TO_DEVELOP_2])
+# 继续培养
+
+# TODO 处理长时间未操作的情况下，弹出的重连界面
+
 CULTIVATE_SCENARIO_SELECT = UI("CULTIVATE_SCENARIO_SELECT", [template.UI_CULTIVATE_SCENARIO_SELECT], [])
 CULTIVATE_FOLLOW_SUPPORT_CARD_SELECT = UI("CULTIVATE_FOLLOW_SUPPORT_CARD_SELECT",
                                           [template.UI_CULTIVATE_FOLLOW_SUPPORT_CARD_SELECT], [])
@@ -70,6 +83,8 @@ ACTIVITY_RESULT = UI("ACTIVITY_RESULT", [template.UI_ACTIVITY_RESULT], [])
 ACTIVITY_REWARD = UI("ACTIVITY_REWARD", [template.UI_ACTIVITY_REWARD], [])
 
 scan_ui_list = [MAIN_MENU,
+                ANNOUNCEMENT,
+                CONTINUE_TO_DEVELOP,
                 CULTIVATE_SCENARIO_SELECT, CULTIVATE_UMAMUSUME_SELECT, CULTIVATE_EXTEND_UMAMUSUME_SELECT,
                 CULTIVATE_SUPPORT_CARD_SELECT, CULTIVATE_FOLLOW_SUPPORT_CARD_SELECT, CULTIVATE_FINAL_CHECK, INFO,
                 CULTIVATE_MAIN_MENU, CULTIVATE_TRAINING_SELECT, CULTIVATE_EXTEND, CULTIVATE_CATCH_DOLL_GAME,

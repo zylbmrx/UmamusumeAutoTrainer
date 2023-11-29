@@ -17,6 +17,8 @@ script_dicts: Dict[UmamusumeTaskType, dict] = {
         # 注册脚本
         INFO: script_info,
         MAIN_MENU: script_main_menu,
+        ANNOUNCEMENT: script_announcement,
+        CONTINUE_TO_DEVELOP: script_continue_to_develop,
         CULTIVATE_SCENARIO_SELECT: script_scenario_select,
         CULTIVATE_UMAMUSUME_SELECT: script_umamusume_select,
         CULTIVATE_EXTEND_UMAMUSUME_SELECT: script_extend_umamusume_select,

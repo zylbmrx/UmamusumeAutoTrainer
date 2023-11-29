@@ -34,8 +34,8 @@ def startup_event():
 
 @server.on_event("shutdown")
 def shutdown_event():
+    after_connect()
     if sys.platform == "win32":
-        after_connect()
         # 解决pycharm下按ctrl+c无法退出的问题
         os.popen("taskkill /F /PID " + str(os.getpid()))
 

@@ -140,6 +140,13 @@ def script_main_menu(ctx: UmamusumeContext):
     ctx.ctrl.click_by_point(TO_CULTIVATE_SCENARIO_CHOOSE)
 
 
+def script_announcement(ctx: UmamusumeContext):
+    ctx.ctrl.click_by_point(ANNOUNCEMENT_CLOSE)
+
+def script_continue_to_develop(ctx: UmamusumeContext):
+    ctx.ctrl.click_by_point(CONTINUE_TO_DEVELOP_BUTTON)
+
+
 def script_scenario_select(ctx: UmamusumeContext):
     ctx.ctrl.click_by_point(TO_CULTIVATE_PREPARE_NEXT)
 
