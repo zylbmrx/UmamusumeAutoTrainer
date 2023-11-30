@@ -38,7 +38,7 @@ class event_handling:
         self.event_path = "./event.json" if CONFIG.event.path is None else CONFIG.event.path
         if not os.path.exists(self.event_path):
             with open(self.event_path, "w", encoding='utf-8') as f:
-                f.write("{}")
+                f.write(json.dumps({EventType.EVENT.value: {}, }, indent=4, ensure_ascii=False))
         self.event = self.read_event()
 
     def reload(self):
