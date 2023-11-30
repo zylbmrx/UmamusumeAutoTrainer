@@ -459,6 +459,7 @@ def get_skill_list(img, skill: list[str]) -> list:
                 # TODO 解决识别为''的情况
 
                 # 检查是不是金色技能
+                # TODO 金技能的判断有问题,点了次级技能会不点金技能
                 mask = cv2.inRange(skill_info_cp, numpy.array([40, 180, 240]), numpy.array([100, 210, 255]))
                 is_gold = True if mask[120, 600] == 255 else False
 
