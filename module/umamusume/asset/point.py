@@ -11,6 +11,10 @@ CULTIVATE_FINAL_CHECK_START = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDIN
 TO_FOLLOW_SUPPORT_CARD_SELECT = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(570, 680), "借用支援卡")
 FOLLOW_SUPPORT_CARD_SELECT_REFRESH = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(650, 1010), "借用支援卡-刷新")
 
+OPEN_MENU = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(638, 1230), "打开菜单", None)
+CLOSE_MENU = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(354, 924), "关闭菜单", None)
+OPEN_BREEDING_INFORMATION = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(210, 694), "打开育成信息", None)
+CLOSE_BREEDING_INFORMATION = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(350, 1180), "关闭育成信息", None)
 TO_TRAINING_SELECT = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(355, 990), "前往训练选择", None)
 CULTIVATE_REST = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(120, 995), "休息", None)
 CULTIVATE_SKILL_LEARN = ClickPoint(ClickPointType.CLICK_POINT_TYPE_COORDINATE, None, Coordinate(600, 987), "技能", None)

@@ -25,3 +25,8 @@ bluestacks:
   fb_width: 720
   gl_win_screen: \\.\DISPLAY2
   dpi: 180
+
+event:
+  path: "./event.json"
+  use_wiki: True
+  use_wiki_path: "https://wiki.biligame.com/umamusume/"

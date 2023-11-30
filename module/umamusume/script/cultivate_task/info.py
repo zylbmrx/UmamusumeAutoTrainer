@@ -43,6 +43,8 @@ TITLE = {
     26: "确认",
     27: "回复训练值",
     28: "选择养成难度",
+    29: "菜单",
+    30: "编成信息",
 }
 
 
@@ -144,4 +146,16 @@ def script_info(ctx: UmamusumeContext):
                 ctx.ctrl.click_by_point(USE_TP_DRINK_RESULT_CLOSE)
         if title_text == TITLE[28]:
             ctx.ctrl.click_by_point(SELECT_DIFFICULTY)
+        if title_text == TITLE[29]:
+            if ctx.cultivate_detail.umamusume_girl is None:
+                ctx.ctrl.click_by_point(OPEN_BREEDING_INFORMATION)
+            else:
+                ctx.ctrl.click_by_point(CLOSE_MENU)
+        if title_text == TITLE[30]:
+            if ctx.cultivate_detail.umamusume_girl is None:
+                ctx.cultivate_detail.umamusume_girl = ocr_line(img[170:260, 150:680])
+                log.info("养成的马娘:%s" % ctx.cultivate_detail.umamusume_girl)
+                ctx.ctrl.click_by_point(CLOSE_BREEDING_INFORMATION)
+            else:
+                ctx.ctrl.click_by_point(CLOSE_BREEDING_INFORMATION)
         time.sleep(1)

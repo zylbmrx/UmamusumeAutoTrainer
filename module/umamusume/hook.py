@@ -10,7 +10,8 @@ log = logger.get_logger(__name__)
 
 
 def before_hook(ctx: UmamusumeContext):
-    pass
+    ctx.cultivate_detail.events.reload()
+    # 重载事件
 
 
 def after_hook(ctx: UmamusumeContext):

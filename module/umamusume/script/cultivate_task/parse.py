@@ -354,6 +354,13 @@ def find_support_card(ctx: UmamusumeContext, img):
 def parse_cultivate_event(ctx: UmamusumeContext, img) -> (str, list[int]):
     event_name_img = img[237:283, 111:480]
     event_name = ocr_line(event_name_img)
+
+    event_type_img = img[200:237, 100:330]
+    if ocr_line(event_type_img) == "养成优俊少女事件":
+        event_type = EventType.EVENT
+    else:
+        event_type = EventType.SUPPORT_CARD
+
     event_selector_list = []
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     while True:
@@ -365,7 +372,7 @@ def parse_cultivate_event(ctx: UmamusumeContext, img) -> (str, list[int]):
         else:
             break
     event_selector_list.sort(key=lambda x: x[1])
-    return event_name, event_selector_list
+    return event_name, event_selector_list, event_type
 
 
 def find_race(ctx: UmamusumeContext, img, race_id: int = 0) -> bool:

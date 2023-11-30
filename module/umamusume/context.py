@@ -1,4 +1,5 @@
 from bot.base.context import BotContext
+from module.umamusume.script.cultivate_task.event.event_handling import event_handling
 from module.umamusume.task import UmamusumeTask, UmamusumeTaskType
 from module.umamusume.define import *
 import bot.base.log as logger
@@ -171,6 +172,7 @@ class CultivateContextDetail:
     def __init__(self):
         self.expect_attribute = None
         self.current_attribute = None
+        self.umamusume_girl = None
         self.turn_info = TurnInfo()
         self.turn_info_history = []
         self.extra_race_list = []
@@ -186,6 +188,7 @@ class CultivateContextDetail:
         self.allow_recover_tp = False
         self.parse_factor_done = False
         self.extra_weight = []
+        self.events = event_handling()
 
     def reset_skill_learn(self):
         self.learn_skill_done = False

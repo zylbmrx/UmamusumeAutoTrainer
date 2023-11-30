@@ -2,6 +2,12 @@ import time
 from enum import Enum
 
 
+class EventType(Enum):
+    EVENT = 'event'
+    SUPPORT_CARD = '!support_card'
+    # 单纯懒得写保存文件的排序逻辑了,找个ASCII小的放前面,方便阅读
+
+
 class ScenarioType(Enum):
     SCENARIO_TYPE_UNKNOWN = 0
     SCENARIO_TYPE_URA = 1
@@ -71,8 +77,6 @@ class TrainingTry:
             if v is False:
                 return False
         return True
-
-
 
 
 class MotivationLevel(Enum):

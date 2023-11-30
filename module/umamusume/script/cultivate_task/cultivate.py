@@ -32,6 +32,11 @@ def script_cultivate_main_menu(ctx: UmamusumeContext):
     if not ctx.cultivate_detail.turn_info.parse_main_menu_finish:
         parse_cultivate_main_menu(ctx, img)
 
+    if ctx.cultivate_detail.umamusume_girl is None:
+        # 获取马娘信息
+        ctx.ctrl.click_by_point(OPEN_MENU)
+        return
+
     has_extra_race = len([i for i in ctx.cultivate_detail.extra_race_list if str(i)[:2]
                           == str(ctx.cultivate_detail.turn_info.date)]) != 0
 
@@ -195,14 +200,14 @@ def script_cultivate_final_check(ctx: UmamusumeContext):
 
 def script_cultivate_event(ctx: UmamusumeContext):
     img = ctx.ctrl.get_screen()
-    event_name, selector_list = parse_cultivate_event(ctx, img)
+    event_name, selector_list, event_type = parse_cultivate_event(ctx, img)
     log.debug("当前事件：%s", event_name)
     if len(selector_list) != 0 and len(selector_list) != 1:
         time.sleep(0.5)
         # 避免出现选项残缺的情况，这里重新解析一次
         img = ctx.ctrl.get_screen()
-        event_name, selector_list = parse_cultivate_event(ctx, img)
-        choice_index = get_event_choice(ctx, event_name)
+        event_name, selector_list, event_type = parse_cultivate_event(ctx, img)
+        choice_index = get_event_choice(ctx, event_name, event_type)
         # 意外情况容错
         if choice_index - 1 > len(selector_list):
             choice_index = 1
