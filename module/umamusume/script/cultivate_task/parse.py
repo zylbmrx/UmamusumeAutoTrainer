@@ -1,17 +1,19 @@
 import re
+import time
 from difflib import SequenceMatcher
 
 import cv2
 import numpy
 
 from bot.recog.image_matcher import image_match, compare_color_equal
-from bot.recog.ocr import ocr_line, find_similar_text
+from bot.recog.ocr import ocr_line, find_similar_text, find_similar_text_and_get_index
 from module.umamusume.asset.race_data import RACE_LIST
 from module.umamusume.context import UmamusumeContext, SupportCardInfo
 from module.umamusume.asset import *
 from module.umamusume.define import *
 from module.umamusume.script.cultivate_task.const import DATE_YEAR, DATE_MONTH
 import bot.base.log as logger
+from module.umamusume.tools.deleteSymbol import character_maketrans
 
 log = logger.get_logger(__name__)
 
@@ -409,8 +411,8 @@ def find_skill(ctx: UmamusumeContext, img, skill: list[str], learn_any_skill: bo
                 skill_info_img = img[pos[0][1] - 65:pos[1][1] + 75, pos[0][0] - 470: pos[1][0] + 150]
                 if not image_match(skill_info_img, REF_SKILL_LEARNED).find_match:
                     skill_name_img = skill_info_img[10: 47, 100: 445]
-                    text = ocr_line(skill_name_img)
-                    result = find_similar_text(text, skill, 0.7)
+                    text = character_maketrans(ocr_line(skill_name_img))
+                    result = find_similar_text(text, skill, 0.8)
                     # print(text + "->" + result)
                     if result != "" or learn_any_skill:
                         tmp_img = ctx.ctrl.get_screen()
@@ -452,31 +454,29 @@ def get_skill_list(img, skill: list[str]) -> list:
 
                 skill_name_img = skill_info_img[10: 47, 100: 445]
                 skill_cost_img = skill_info_img[69: 99, 525: 588]
-                text = ocr_line(skill_name_img)
+                text = character_maketrans(ocr_line(skill_name_img))
                 cost = re.sub("\\D", "", ocr_line(skill_cost_img))
 
-                if type(cost) == str: cost = 0
-                # TODO 解决识别为''的情况
+                try:
+                    # 所以这里才是卡在技能学习界面的元凶，cost识别为0，程序判断点击学习了技能，单实则没有学习，于是无法进行到下一步
+                    cost = int(cost)
+                except:
+                    cost = 0
 
                 # 检查是不是金色技能
-                # TODO 金技能的判断有问题,点了次级技能会不点金技能
                 mask = cv2.inRange(skill_info_cp, numpy.array([40, 180, 240]), numpy.array([100, 210, 255]))
                 is_gold = True if mask[120, 600] == 255 else False
 
-                skill_in_priority_list = False
-                priority = 99
-                for i in range(len(skill)):
-                    if find_similar_text(text, skill[i], 0.7) != "":
-                        priority = i
-                        skill_in_priority_list = True
-                        break
-                if not skill_in_priority_list:
+                re_text, priority = find_similar_text_and_get_index(text, skill, 0.8)
+
+                if re_text == "":
                     priority = len(skill)
 
                 available = not image_match(skill_info_img, REF_SKILL_LEARNED).find_match
 
                 res.append({"skill_name": text,
                             "skill_cost": int(cost),
+                            "index": len(res),
                             "priority": priority,
                             "is_gold": is_gold,
                             "subsequent_skill": "",
@@ -499,9 +499,10 @@ def get_skill_list(img, skill: list[str]) -> list:
                 mask = cv2.inRange(skill_info_cp, numpy.array([40, 180, 240]), numpy.array([100, 210, 255]))
                 is_gold = True if mask[120, 600] == 255 else False
                 skill_name_img = skill_info_img[10: 47, 100: 445]
-                text = ocr_line(skill_name_img)
+                text = character_maketrans(ocr_line(skill_name_img))
                 res.append({"skill_name": text,
                             "skill_cost": 0,
+                            "index": len(res),
                             "priority": -1,
                             "is_gold": is_gold,
                             "subsequent_skill": "",

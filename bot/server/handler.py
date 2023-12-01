@@ -14,6 +14,7 @@ from bot.engine import ctrl as bot_ctrl
 from bot.server.protocol.task import *
 from starlette.responses import FileResponse
 import bot.base.log as logger
+from config import CONFIG
 
 server = FastAPI()
 
@@ -30,6 +31,7 @@ log = logger.get_logger(__name__)
 @server.on_event("startup")
 def startup_event():
     before_connect()
+    print("UAT running on http://" + CONFIG.host + ":" + str(CONFIG.port))
 
 
 @server.on_event("shutdown")

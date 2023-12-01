@@ -29,4 +29,4 @@ bluestacks:
 event:
   path: "./event.json"
   use_wiki: True
-  use_wiki_path: "https://wiki.biligame.com/umamusume/"
+  wiki_path: "https://wiki.biligame.com/umamusume/"

@@ -90,6 +90,11 @@ def script_cultivate_training_select(ctx: UmamusumeContext):
         ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_MAIN_MENU)
         return
 
+    if ctx.cultivate_detail.umamusume_girl is None:
+        log.warning("马娘信息未初始化")
+        ctx.ctrl.click_by_point(OPEN_MENU)
+        return
+
     if ctx.cultivate_detail.turn_info.turn_operation is not None:
         if (ctx.cultivate_detail.turn_info.turn_operation.turn_operation_type ==
                 TurnOperationType.TURN_OPERATION_TYPE_TRAINING):
@@ -387,7 +392,8 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
         if len(ctx.cultivate_detail.learn_skill_list) == 0:
             learn_skill_list = SKILL_LEARN_PRIORITY_LIST
         else:
-            learn_skill_list = [ctx.cultivate_detail.learn_skill_list] + SKILL_LEARN_PRIORITY_LIST
+            learn_skill_list = ctx.cultivate_detail.learn_skill_list + SKILL_LEARN_PRIORITY_LIST
+            # 直接看顺序指定优先级
     else:
         if len(ctx.cultivate_detail.learn_skill_list) == 0:
             ctx.ctrl.click_by_point(RETURN_TO_CULTIVATE_FINISH)
@@ -395,23 +401,32 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
             ctx.cultivate_detail.turn_info.turn_learn_skill_done = True
             return
         else:
-            learn_skill_list = [ctx.cultivate_detail.learn_skill_list]
+            learn_skill_list = ctx.cultivate_detail.learn_skill_list
 
-    script_cultivate_learn_skill_select(ctx, learn_skill_list)
+    skill_list = _script_cultivate_learn_skill_select(ctx, learn_skill_list)
 
     if ctx.cultivate_detail.cultivate_finish:
         # 如果是养成结束,在点完必点技能或者没有必点技能后再识别一次,学习其他技能
-        if len(ctx.cultivate_detail.learn_skill_list) == 0:
-            learn_skill_list = SKILL_LEARN_PRIORITY_LIST
-        else:
-            learn_skill_list = [ctx.cultivate_detail.learn_skill_list] + SKILL_LEARN_PRIORITY_LIST
-        script_cultivate_learn_skill_select(ctx, learn_skill_list)
+        while True:
+            img = ctx.ctrl.get_screen()
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            if not compare_color_equal(img[488, 701], [211, 209, 219], 25):
+                break
+            ctx.ctrl.swipe(x1=23, y1=636, x2=23, y2=1000, duration=1000, name="")
+            time.sleep(1)
+        learn_skill_list = []
+        for skill in skill_list:
+            if skill["available"] is True:
+                learn_skill_list.append(skill["skill_name"])
+        _script_cultivate_learn_skill_select(ctx, learn_skill_list)
 
     ctx.cultivate_detail.learn_skill_done = True
     ctx.cultivate_detail.turn_info.turn_learn_skill_done = True
 
+    time.sleep(100)
 
-def script_cultivate_learn_skill_select(ctx: UmamusumeContext, learn_skill_list: list):
+
+def _script_cultivate_learn_skill_select(ctx: UmamusumeContext, learn_skill_list: list):
     # 遍历整页, 找出所有可点的技能
     skill_list = []
     while ctx.task.running():
@@ -433,10 +448,14 @@ def script_cultivate_learn_skill_select(ctx: UmamusumeContext, learn_skill_list:
     for i in range(len(skill_list)):
         if i != (len(skill_list) - 1) and skill_list[i]["is_gold"] is True:
             skill_list[i]["subsequent_skill"] = skill_list[i + 1]["skill_name"]
+            if skill_list[i]["priority"] > skill_list[i + 1]["priority"]:
+                # 如果配置文件里的优先级顺序写错了,交换优先级
+                skill_list[i]["priority"], skill_list[i + 1]["priority"] = skill_list[i + 1]["priority"], skill_list[i][
+                    "priority"]
 
     # 按照优先级排列
-    skill_list = sorted(skill_list, key=lambda x: x["priority"])
-    # TODO: 暂时没办法处理一个技能可以点多次的情况
+    skill_list = sorted(skill_list, key=lambda x: (x["priority"], x["index"]))
+    # TODO: 暂时没办法处理一个技能可以点多次的情况，把点了的技能记录一下，优先级翻倍或者其他处理
     img = ctx.ctrl.get_screen()
     total_skill_point_text = re.sub("\\D", "", ocr_line(img[400: 440, 490: 665]))
     if total_skill_point_text == "":
@@ -446,17 +465,19 @@ def script_cultivate_learn_skill_select(ctx: UmamusumeContext, learn_skill_list:
     target_skill_list = []
     curr_point = 0
     for i in range(len(learn_skill_list) + 1):
+        # 考虑类似背包算法？？，现在再结束养成后会再点一次技能，基本可以把技能点用完
         if (i > 0 and ctx.cultivate_detail.learn_skill_only_user_provided is True and
                 not ctx.cultivate_detail.cultivate_finish):
             break
         for j in range(len(skill_list)):
-            if skill_list[j]["priority"] != i or skill_list[j]["available"] is False:
+            if skill_list[j]["priority"] >= len(learn_skill_list) or skill_list[j]["available"] is False:
+                # 如果优先级大于等于必点技能的数量, 或者技能不可点, 则跳过
                 continue
             if curr_point + skill_list[j]["skill_cost"] <= total_skill_point:
                 curr_point += skill_list[j]["skill_cost"]
                 target_skill_list.append(skill_list[j]["skill_name"])
                 # 如果点的是金色技能, 就将其绑定的下位技能设置为不可点
-                if skill_list[j]["is_gold"] == True and skill_list[j]["subsequent_skill"] != '':
+                if skill_list[j]["is_gold"] is True and skill_list[j]["subsequent_skill"] != '':
 
                     for k in range(len(skill_list)):
                         if skill_list[k]["skill_name"] == skill_list[j]["subsequent_skill"]:
@@ -486,6 +507,7 @@ def script_cultivate_learn_skill_select(ctx: UmamusumeContext, learn_skill_list:
 
     log.debug("当前待学习的技能：" + str(ctx.cultivate_detail.learn_skill_list))
     log.debug("当前已学习的技能：" + str([skill['skill_name'] for skill in skill_list if not skill['available']]))
+    return skill_list
 
 
 def script_not_found_ui(ctx: UmamusumeContext):

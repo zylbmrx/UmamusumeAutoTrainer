@@ -153,7 +153,8 @@ def script_info(ctx: UmamusumeContext):
                 ctx.ctrl.click_by_point(CLOSE_MENU)
         if title_text == TITLE[30]:
             if ctx.cultivate_detail.umamusume_girl is None:
-                ctx.cultivate_detail.umamusume_girl = ocr_line(img[170:260, 150:680])
+                ctx.cultivate_detail.umamusume_girl = ctx.cultivate_detail.events.get_umamusume_girl_name(
+                    ocr_line(img[170:260, 150:680]))
                 log.info("养成的马娘:%s" % ctx.cultivate_detail.umamusume_girl)
                 ctx.ctrl.click_by_point(CLOSE_BREEDING_INFORMATION)
             else:

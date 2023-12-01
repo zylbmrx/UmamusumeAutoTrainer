@@ -1,4 +1,5 @@
 import os
+import time
 
 from bot.conn.kill_emulator_bluestacks import kill_emulator_bluestacks
 from config import CONFIG
@@ -45,6 +46,9 @@ def before_connect():
 
         if CONFIG.bluestacks.path:
             os.popen('"' + CONFIG.bluestacks.path + '"')
+            print('启动蓝叠模拟器...等待5秒...')
+            # 可以检测单没必要
+            time.sleep(5)
 
 
 def after_connect():

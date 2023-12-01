@@ -48,3 +48,17 @@ def find_similar_text(target_text, ref_text_list, threshold=0):
             result = ref_text
             threshold = s.ratio()
     return result
+
+
+def find_similar_text_and_get_index(target_text, ref_text_list, threshold=0):
+    result = ""
+    index = -1
+    result_index = -1
+    for ref_text in ref_text_list:
+        index += 1
+        s = SequenceMatcher(None, target_text, ref_text)
+        if s.ratio() > threshold:
+            result = ref_text
+            result_index = index
+            threshold = s.ratio()
+    return result, result_index

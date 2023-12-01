@@ -1,6 +1,7 @@
 import json
 from enum import Enum
 from bot.base.task import Task, TaskExecuteMode, TaskType
+from module.umamusume.tools.deleteSymbol import character_maketrans
 
 
 class TaskDetail:
@@ -57,7 +58,11 @@ def build_task(task_execute_mode: TaskExecuteMode, task_type: int,
     td.follow_support_card_level = int(attachment_data['follow_support_card_level'])
     td.follow_support_card_name = attachment_data['follow_support_card_name']
     td.extra_race_list = attachment_data['extra_race_list']
-    td.learn_skill_list = attachment_data['learn_skill_list']
+    td.learn_skill_list = []
+
+    for i in range(0, len(attachment_data['learn_skill_list'])):
+        td.learn_skill_list.append(character_maketrans(attachment_data['learn_skill_list'][i]))
+
     td.tactic_list = attachment_data['tactic_list']
     td.clock_use_limit = attachment_data['clock_use_limit']
     td.learn_skill_threshold = attachment_data['learn_skill_threshold']
