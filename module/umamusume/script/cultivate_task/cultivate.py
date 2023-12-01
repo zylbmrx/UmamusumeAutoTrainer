@@ -372,7 +372,6 @@ def script_cultivate_finish(ctx: UmamusumeContext):
 def script_cultivate_learn_skill(ctx: UmamusumeContext):
     if ctx.cultivate_detail.learn_skill_done:
         if ctx.cultivate_detail.learn_skill_selected and ctx.cultivate_detail.learn_skill_selected_click_count < 10:
-            # TODO 查找原因
             ctx.cultivate_detail.learn_skill_selected_click_count += 1
             if ctx.cultivate_detail.learn_skill_selected_click_count > 3:
                 # 说明可能出现了卡在了技能选择界面的情况
@@ -422,8 +421,6 @@ def script_cultivate_learn_skill(ctx: UmamusumeContext):
 
     ctx.cultivate_detail.learn_skill_done = True
     ctx.cultivate_detail.turn_info.turn_learn_skill_done = True
-
-    time.sleep(100)
 
 
 def _script_cultivate_learn_skill_select(ctx: UmamusumeContext, learn_skill_list: list):
