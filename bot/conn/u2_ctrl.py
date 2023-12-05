@@ -37,6 +37,8 @@ def wrapper(func):
         raise Exception("adb操作失败")
 
     return checker
+
+
 @dataclass
 class U2AndroidConfig:
     _device_name: str
@@ -50,7 +52,7 @@ class U2AndroidConfig:
     def device_name(self) -> str:
         bluestacks_port = self.bluestacks_port
         if bluestacks_port is not None:
-            return f"127.0.0.1:{bluestacks_port}"
+            return "127.0.0.1:%s" % bluestacks_port
         return self._device_name
 
     @property
@@ -68,12 +70,18 @@ class U2AndroidConfig:
 
     @staticmethod
     def load(config: Config):
-        return U2AndroidConfig(
-            _device_name=config.bot.auto.adb.device_name,
-            delay=config.bot.auto.adb.delay,
-            bluestacks_config_path=config.bot.auto.adb.bluestacks_config_path,
-            bluestacks_config_keyword=config.bot.auto.adb.bluestacks_config_keyword,
-        )
+        if CONFIG.bluestacks:
+            return U2AndroidConfig(
+                _device_name=config.bot.auto.adb.device_name,
+                delay=config.bot.auto.adb.delay,
+                bluestacks_config_path=config.bluestacks.bluestacks_conf,
+                bluestacks_config_keyword=config.bluestacks.instance + '.status.adb_port',
+            )
+        else:
+            return U2AndroidConfig(
+                _device_name=config.bot.auto.adb.device_name,
+                delay=config.bot.auto.adb.delay,
+            )
 
 
 class U2AndroidController(AndroidController):
@@ -112,7 +120,7 @@ class U2AndroidController(AndroidController):
             #     log.debug("save screen1 error")
             try:
                 cv2.imencode('.png', cur_screen)[1].tofile(CONFIG.test.save_screen_path + "/%s.png" % time.time())
-            except :
+            except:
                 log.debug("save screen error")
 
         return cur_screen

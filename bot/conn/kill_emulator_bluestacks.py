@@ -4,6 +4,7 @@ import re
 import psutil
 import subprocess
 
+from bot.conn.u2_ctrl import U2AndroidConfig
 from config import CONFIG
 
 
@@ -11,14 +12,14 @@ def kill_emulator_bluestacks():
     for proc in psutil.process_iter(['pid', 'name']):
         if proc.info['name'] == 'HD-Player' or proc.info['name'] == 'HD-Player.exe':
             print(proc.info)
-            kill_emulator()
+            kill_emulator(proc.info['pid'])
     return False
 
 
-def kill_emulator():
+def kill_emulator(pid=0):
     # 端口关闭代码
-    pid = 0
-    address = CONFIG.bot.auto.adb.device_name
+    config = U2AndroidConfig.load(CONFIG)
+    address = config.device_name
     port = address[10:] if address.startswith('127') else '5555'
 
     port_cmd = f"netstat -ano|findstr \"{port}\""
