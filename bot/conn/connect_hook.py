@@ -18,6 +18,9 @@ def before_connect():
             with (open(CONFIG.bluestacks.bluestacks_conf, 'r', encoding='utf-8') as f):
                 lines = f.readlines()
 
+                with (open(CONFIG.bluestacks.bluestacks_conf+'.bak', 'w', encoding='utf-8') as bak):
+                    bak.write(lines.__str__())
+
                 for i in lines:
                     old_bluestacks += i
                     if i.startswith(instance + '.fb_height'):
