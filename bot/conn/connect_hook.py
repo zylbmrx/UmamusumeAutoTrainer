@@ -19,7 +19,7 @@ def before_connect():
                 lines = f.readlines()
 
                 with (open(CONFIG.bluestacks.bluestacks_conf+'.bak', 'w', encoding='utf-8') as bak):
-                    bak.write(lines.__str__())
+                    bak.write(''.join(lines))
 
                 for i in lines:
                     old_bluestacks += i

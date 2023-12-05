@@ -45,6 +45,7 @@ TITLE = {
     28: "选择养成难度",
     29: "菜单",
     30: "编成信息",
+    31: "连接已断开",
 }
 
 
@@ -159,4 +160,6 @@ def script_info(ctx: UmamusumeContext):
                 ctx.ctrl.click_by_point(CLOSE_BREEDING_INFORMATION)
             else:
                 ctx.ctrl.click_by_point(CLOSE_BREEDING_INFORMATION)
+        if title_text == TITLE[31]:
+            ctx.ctrl.click_by_point(RETURN_TO_TITLE_INTERFACE)
         time.sleep(1)
